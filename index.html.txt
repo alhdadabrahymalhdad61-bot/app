@@ -1,0 +1,460 @@
+[19/05/2026 06:37 م] Ibrahim Elhadad: <!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تطبيق ابراهيم الحداد المتكامل</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --accent-color: #3b82f6;
+            --accent-hover: #2563eb;
+            --border-color: #334155;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* القائمة الجانبية */
+        .sidebar {
+            width: 280px;
+            background-color: var(--card-bg);
+            border-left: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .profile {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .profile h2 {
+            font-size: 1.3rem;
+            color: var(--accent-color);
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            padding: 14px;
+            text-align: right;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-btn:hover, .menu-btn.active {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        /* المحتوى الرئيسي */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .clock {
+            font-size: 1.2rem;
+            font-weight: bold;
+            background: var(--card-bg);
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .page {
+            display: none;
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            height: calc(100vh - 150px);
+            overflow-y: auto;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* العناصر العامة */
+        input, textarea, select {
+            width: 100%;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--accent-color);
+        }
+
+        button.primary {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        button.primary:hover {
+            background-color: var(--accent-hover);
+        }
+
+        /* تصميم قسم بومودورو */
+        .pomodoro-container {
+            text-align: center;
+            padding: 40px 20px;
+        }
+[19/05/2026 06:37 م] Ibrahim Elhadad: .timer-display {
+            font-size: 5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            font-family: monospace;
+            color: var(--accent-color);
+        }
+
+        .timer-btn {
+            background-color: var(--success-color);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: bold;
+        }
+
+        .timer-btn.stop {
+            background-color: var(--danger-color);
+        }
+
+        /* تصميم الحاسبة المالية */
+        .finance-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .summary-box {
+            display: flex;
+            justify-content: space-between;
+            background: var(--bg-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            border: 1px solid var(--border-color);
+        }
+
+        .todo-item, .finance-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-color);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-delete {
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- القائمة الجانبية -->
+    <div class="sidebar">
+        <div class="profile">
+            <h2>ابراهيم الحداد</h2>
+            <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 5px;">منصة الإنتاجية المتكاملة</p>
+        </div>
+        <button class="menu-btn active" onclick="switchPage('home')">🏠 الرئيسة</button>
+        <button class="menu-btn" onclick="switchPage('notes')">📝 المفكرة السريعة</button>
+        <button class="menu-btn" onclick="switchPage('tasks')">✅ قائمة المهام</button>
+        <button class="menu-btn" onclick="switchPage('pomodoro')">⏱️ مؤقت بومودورو</button>
+        <button class="menu-btn" onclick="switchPage('finance')">💰 الحاسبة المالية</button>
+    </div>
+
+    <!-- المحتوى الرئيسي -->
+    <div class="main-content">
+        <header>
+            <h1 id="page-title">الرئيسة</h1>
+            <div class="clock" id="digital-clock">00:00:00</div>
+        </header>
+
+        <!-- صفحة الرئيسة -->
+        <div id="home" class="page active">
+            <h3>مرحباً بك مجدداً، أستاذ ابراهيم 👋</h3>
+            <p style="margin-top: 15px; color: #94a3b8; line-height: 1.8; font-size: 1.1rem;">
+                تم تحديث تطبيقك وإضافة أدوات متقدمة لتنظيم يومك وزيادة إنتاجيتك ومتابعة مصاريفك:
+            </p>
+            <ul style="margin: 20px 25px 0 0; color: #94a3b8; line-height: 2;">
+                <li><strong>المفكرة السريعة:</strong> تدوين فوري للأفكار والمشروعات.</li>
+                <li><strong>قائمة المهام:</strong> جدولة ومتابعة أعمالك اليومية خطوة بخطوة.</li>
+                <li><strong>مؤقت بومودورو:</strong> العمل بتركيز لمدة 25 دقيقة مع فترات راحة ذكية.</li>
+                <li><strong>الحاسبة المالية:</strong> تتبع الدخل والمصاريف ومعرفة صافي الرصيد المتبقي لديك.</li>
+            </ul>
+        </div>
+
+        <!-- صفحة المفكرة -->
+        <div id="notes" class="page">
+            <textarea id="note-pad" rows="15" placeholder="اكتب أفكارك وملاحظاتك هنا... يتم الحفظ تلقائياً فور الكتابة."></textarea>
+        </div>
+
+        <!-- صفحة المهام -->
+        <div id="tasks" class="page">
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="task-input" placeholder="أضف مهمة جديدة واضغط إنتر للإنتاجية...">
+[19/05/2026 06:37 م] Ibrahim Elhadad: <button class="primary" onclick="addTask()" style="height: 48px; white-space: nowrap;">إضافة مهمة</button>
+            </div>
+            <div id="todo-list" style="margin-top: 20px;"></div>
+        </div>
+
+        <!-- صفحة بومودورو -->
+        <div id="pomodoro" class="page">
+            <div class="pomodoro-container">
+                <h3 id="timer-status">وقت التركيز 🎯</h3>
+                <div class="timer-display" id="timer-display">25:00</div>
+                <button class="timer-btn" id="btn-start" onclick="toggleTimer()">ابدأ العمل</button>
+                <button class="timer-btn stop" onclick="resetTimer()">إعادة ضبط</button>
+            </div>
+        </div>
+
+        <!-- صفحة الحاسبة المالية -->
+        <div id="finance" class="page">
+            <div class="finance-grid">
+                <div>
+                    <h3>إضافة معاملة جديدة</h3>
+                    <input type="text" id="fin-desc" placeholder="بيان المعاملة (مثال: راتب، فاتورة كهرباء)">
+                    <input type="number" id="fin-amount" placeholder="المبلغ">
+                    <select id="fin-type">
+                        <option value="income">دخل (+)</option>
+                        <option value="expense">مصاريف (-)</option>
+                    </select>
+                    <button class="primary" onclick="addTransaction()" style="width: 100%;">تسجيل المعاملة</button>
+                </div>
+                <div>
+                    <h3>ملخص الحسابات</h3>
+                    <div class="summary-box" style="color: var(--success-color);"><span>إجمالي الدخل:</span><span id="total-income">0</span></div>
+                    <div class="summary-box" style="color: var(--danger-color);"><span>إجمالي المصاريف:</span><span id="total-expense">0</span></div>
+                    <div class="summary-box" style="background: var(--accent-color); color: white;"><span>صافي الرصيد:</span><span id="net-balance">0</span></div>
+                    
+                    <h3 style="margin-top: 20px; margin-bottom: 10px;">السجل الأخير</h3>
+                    <div id="finance-list" style="max-height: 200px; overflow-y: auto;"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // نظام التنقل بين الصفحات
+        function switchPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(pageId).classList.add('active');
+            event.target.classList.add('active');
+            
+            const titles = { home: 'الرئيسة', notes: 'المفكرة السريعة', tasks: 'قائمة المهام', pomodoro: 'مؤقت بومودورو للتركيز', finance: 'الحاسبة المالية الشخصية' };
+            document.getElementById('page-title').innerText = titles[pageId];
+        }
+
+        // الساعة الرقمية المتزامنة
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('digital-clock').innerText = now.toLocaleTimeString('ar-EG');
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // نظام المفكرة (حفظ تلقائي)
+        const notePad = document.getElementById('note-pad');
+        notePad.value = localStorage.getItem('ibrahim_notes') || '';
+        notePad.addEventListener('input', () => {
+            localStorage.setItem('ibrahim_notes', notePad.value);
+        });
+
+        // نظام المهام
+        let tasks = JSON.parse(localStorage.getItem('ibrahim_tasks')) || [];
+        function renderTasks() {
+            const list = document.getElementById('todo-list');
+            list.innerHTML = '';
+            tasks.forEach((task, index) => {
+                list.innerHTML += `
+                    <div class="todo-item">
+[19/05/2026 06:37 م] Ibrahim Elhadad: <span>${task}</span>
+                        <button class="btn-delete" onclick="deleteTask(${index})">حذف</button>
+                    </div>
+                ;
+            });
+        }
+        function addTask() {
+            const input = document.getElementById('task-input');
+            if (input.value.trim() !== '') {
+                tasks.push(input.value.trim());
+                localStorage.setItem('ibrahim_tasks', JSON.stringify(tasks));
+                input.value = '';
+                renderTasks();
+            }
+        }
+        function deleteTask(index) {
+            tasks.splice(index, 1);
+            localStorage.setItem('ibrahim_tasks', JSON.stringify(tasks));
+            renderTasks();
+        }
+
+        // نظام مؤقت بومودورو
+        let timer;
+        let isRunning = false;
+        let timeLeft = 25 * 60; 
+        let isBreak = false;
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+            const seconds = (timeLeft % 60).toString().padStart(2, '0');
+            document.getElementById('timer-display').innerText = ${minutes}:${seconds};
+        }
+
+        function toggleTimer() {
+            const btn = document.getElementById('btn-start');
+            if (isRunning) {
+                clearInterval(timer);
+                btn.innerText = "استئناف";
+                isRunning = false;
+            } else {
+                isRunning = true;
+                btn.innerText = "إيقاف مؤقت";
+                timer = setInterval(() => {
+                    if (timeLeft > 0) {
+                        timeLeft--;
+                        updateTimerDisplay();
+                    } else {
+                        clearInterval(timer);
+                        isRunning = false;
+                        isBreak = !isBreak;
+                        timeLeft = isBreak ? 5 * 60 : 25 * 60;
+                        document.getElementById('timer-status').innerText = isBreak ? "وقت الراحة ☕" : "وقت التركيز 🎯";
+                        alert(isBreak ? "حان وقت الراحة (5 دقائق)!" : "انتهت الراحة، اعد للتركيز!");
+                        btn.innerText = "ابدأ العمل";
+                        updateTimerDisplay();
+                    }
+                }, 1000);
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(timer);
+            isRunning = false;
+            isBreak = false;
+            timeLeft = 25 * 60;
+            document.getElementById('timer-status').innerText = "وقت التركيز 🎯";
+            document.getElementById('btn-start').innerText = "ابدأ العمل";
+            updateTimerDisplay();
+        }
+
+        // نظام المالية
+        let transactions = JSON.parse(localStorage.getItem('ibrahim_finance')) || [];
+        function renderFinance() {
+            const list = document.getElementById('finance-list');
+            list.innerHTML = '';
+            let totalIncome = 0;
+            let totalExpense = 0;
+
+            transactions.forEach((t, index) => {
+                const isInc = t.type === 'income';
+                if (isInc) totalIncome += t.amount; else totalExpense += t.amount;
+
+                list.innerHTML += 
+                    <div class="finance-item">
+                        <span style="color: ${isInc ? 'var(--success-color)' : 'var(--danger-color)'}">
+                            ${t.desc} (${isInc ? '+' : '-'}${t.amount})
+                        </span>
+                        <button class="btn-delete" onclick="deleteTransaction(${index})">حذف</button>
+                    </div>
+                `;
+            });
+
+            document.getElementById('total-income').innerText = totalIncome;
+            document.getElementById('total-expense').innerText = totalExpense;
+            document.getElementById('net-balance').innerText = totalIncome - totalExpense;
+        }
+[19/05/2026 06:37 م] Ibrahim Elhadad: function addTransaction() {
+            const desc = document.getElementById('fin-desc').value.trim();
+            const amount = parseFloat(document.getElementById('fin-amount').value);
+            const type = document.getElementById('fin-type').value;
+
+            if (desc !== '' && !isNaN(amount)) {
+                transactions.push({ desc, amount, type });
+                localStorage.setItem('ibrahim_finance', JSON.stringify(transactions));
+                document.getElementById('fin-desc').value = '';
+                document.getElementById('fin-amount').value = '';
+                renderFinance();
+            }
+        }
+
+        function deleteTransaction(index) {
+            transactions.splice(index, 1);
+            localStorage.setItem('ibrahim_finance', JSON.stringify(transactions));
+            renderFinance();
+        }
+
+        // تشغيل أولي عند الفتح
+        renderTasks();
+        renderFinance();
+    </script>
+</body>
+</html>
