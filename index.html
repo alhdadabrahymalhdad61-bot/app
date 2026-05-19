@@ -1,4 +1,4 @@
-[19/05/2026 06:37 م] Ibrahim Elhadad: <!DOCTYPE html>
+[19/05/2026 07:09 م] Ibrahim Elhadad: <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -67,6 +67,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            width: 100%;
         }
 
         .menu-btn:hover, .menu-btn.active {
@@ -150,7 +151,7 @@
             text-align: center;
             padding: 40px 20px;
         }
-[19/05/2026 06:37 م] Ibrahim Elhadad: .timer-display {
+[19/05/2026 07:09 م] Ibrahim Elhadad: .timer-display {
             font-size: 5rem;
             font-weight: bold;
             margin-bottom: 20px;
@@ -221,11 +222,11 @@
             <h2>ابراهيم الحداد</h2>
             <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 5px;">منصة الإنتاجية المتكاملة</p>
         </div>
-        <button class="menu-btn active" onclick="switchPage('home')">🏠 الرئيسة</button>
-        <button class="menu-btn" onclick="switchPage('notes')">📝 المفكرة السريعة</button>
-        <button class="menu-btn" onclick="switchPage('tasks')">✅ قائمة المهام</button>
-        <button class="menu-btn" onclick="switchPage('pomodoro')">⏱️ مؤقت بومودورو</button>
-        <button class="menu-btn" onclick="switchPage('finance')">💰 الحاسبة المالية</button>
+        <button id="btn-home" class="menu-btn active" onclick="switchPage('home', 'btn-home')">🏠 الرئيسة</button>
+        <button id="btn-notes" class="menu-btn" onclick="switchPage('notes', 'btn-notes')">📝 المفكرة السريعة</button>
+        <button id="btn-tasks" class="menu-btn" onclick="switchPage('tasks', 'btn-tasks')">✅ قائمة المهام</button>
+        <button id="btn-pomo" class="menu-btn" onclick="switchPage('pomodoro', 'btn-pomo')">⏱️ مؤقت بومودورو</button>
+        <button id="btn-fin" class="menu-btn" onclick="switchPage('finance', 'btn-fin')">💰 الحاسبة المالية</button>
     </div>
 
     <!-- المحتوى الرئيسي -->
@@ -255,10 +256,10 @@
         </div>
 
         <!-- صفحة المهام -->
-        <div id="tasks" class="page">
+[19/05/2026 07:09 م] Ibrahim Elhadad: <div id="tasks" class="page">
             <div style="display: flex; gap: 10px;">
                 <input type="text" id="task-input" placeholder="أضف مهمة جديدة واضغط إنتر للإنتاجية...">
-[19/05/2026 06:37 م] Ibrahim Elhadad: <button class="primary" onclick="addTask()" style="height: 48px; white-space: nowrap;">إضافة مهمة</button>
+                <button class="primary" onclick="addTask()" style="height: 48px; white-space: nowrap;">إضافة مهمة</button>
             </div>
             <div id="todo-list" style="margin-top: 20px;"></div>
         </div>
@@ -301,13 +302,13 @@
     </div>
 
     <script>
-        // نظام التنقل بين الصفحات
-        function switchPage(pageId) {
+        // نظام التنقل بين الصفحات المُصلح
+        function switchPage(pageId, buttonId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
             
             document.getElementById(pageId).classList.add('active');
-            event.target.classList.add('active');
+            document.getElementById(buttonId).classList.add('active');
             
             const titles = { home: 'الرئيسة', notes: 'المفكرة السريعة', tasks: 'قائمة المهام', pomodoro: 'مؤقت بومودورو للتركيز', finance: 'الحاسبة المالية الشخصية' };
             document.getElementById('page-title').innerText = titles[pageId];
@@ -330,13 +331,13 @@
 
         // نظام المهام
         let tasks = JSON.parse(localStorage.getItem('ibrahim_tasks')) || [];
-        function renderTasks() {
+[19/05/2026 07:09 م] Ibrahim Elhadad: function renderTasks() {
             const list = document.getElementById('todo-list');
             list.innerHTML = '';
             tasks.forEach((task, index) => {
-                list.innerHTML += `
+                list.innerHTML += 
                     <div class="todo-item">
-[19/05/2026 06:37 م] Ibrahim Elhadad: <span>${task}</span>
+                        <span>${task}</span>
                         <button class="btn-delete" onclick="deleteTask(${index})">حذف</button>
                     </div>
                 ;
@@ -425,14 +426,14 @@
                         </span>
                         <button class="btn-delete" onclick="deleteTransaction(${index})">حذف</button>
                     </div>
-                `;
+                ;
             });
-
-            document.getElementById('total-income').innerText = totalIncome;
+[19/05/2026 07:09 م] Ibrahim Elhadad: document.getElementById('total-income').innerText = totalIncome;
             document.getElementById('total-expense').innerText = totalExpense;
             document.getElementById('net-balance').innerText = totalIncome - totalExpense;
         }
-[19/05/2026 06:37 م] Ibrahim Elhadad: function addTransaction() {
+
+        function addTransaction() {
             const desc = document.getElementById('fin-desc').value.trim();
             const amount = parseFloat(document.getElementById('fin-amount').value);
             const type = document.getElementById('fin-type').value;
